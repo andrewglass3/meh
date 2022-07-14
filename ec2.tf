@@ -47,6 +47,21 @@ resource "aws_subnet" "subnetmeh" {
   }
 }
 
+resource "aws_route_table" "subnetmeh-route" {
+  vpc_id = aws_vpc.meh.id
+}
+
+resource "aws_route" "public_internet_gateway" {
+  route_table_id = "${aws_route_table.subnetmeh-route.id}"
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id = "${aws_internet_gateway.gw.id}"
+}
+
+resource "aws_route_table_association" "meh" {
+  subnet_id = aws_subnet.subnetmeh.id
+  route_table_id = aws_route_table.subnetmeh-route.id
+}
+
 resource "aws_security_group" "allow_ssh" {
   name        = "allow_ssh"
   description = "Allow SSH inbound traffic"
