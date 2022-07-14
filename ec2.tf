@@ -3,7 +3,8 @@ resource "aws_instance" "web" {
   instance_type = "t3.micro"
   subnet_id        = aws_subnet.subnetmeh.id
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
-  key_name = "wireguard_april2022"
+#  key_name = "wireguard_april2022"
+  key_name = aws_key_pair.my_ssh_key.key_name
 
   tags = {
     Name = "MehItAllSucks"
@@ -70,3 +71,9 @@ resource "aws_security_group" "allow_ssh" {
     Name = "allow_ssh"
   }
 }
+
+resource "aws_key_pair" "my_ssh_key" {
+  key_name = "macbook_key"
+  public_key = file("~/.ssh/id_rsa.pub")
+}
+
